@@ -1,7 +1,13 @@
+
+
+
+###
+
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
+  "id": "1111",
   "title": "TITLE",
   "author": "AUTHOR",
   "url": "http://example.com",

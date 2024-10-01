@@ -148,6 +148,34 @@ test.only ('Deletes a single blog (Type wars)', async ()=>{
     assert.strictEqual(originalRes.body.length-1, currentRes.body.length)
 
 })
+
+test.only('Updates likes based on id', async ()=>{
+    const newBlog = {
+        _id: "5a422bc61b54a676234d17fc",
+        title: "Type wars",
+        author: "Robert C. Martin",
+        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+        likes: 999,
+        __v: 0
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+
+    const id = newBlog._id
+    const originalLikes = newBlog.likes
+
+    const changeLikes = 5
+    newBlog.likes = newBlog.likes + changeLikes
+
+    await api
+        .put(`/api/blogs/${id}`)
+        .send(newBlog)
+    const response = await api.get(`/api/blogs`)
+    console.log("RESPONSE:", response.body)
+    assert.strictEqual(originalLikes + changeLikes, response.body[0].likes)
+})
 after(async () => {
     await mongoose.connection.close()
 })

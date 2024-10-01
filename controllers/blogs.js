@@ -19,6 +19,16 @@ blogsRouter.post('/', async (req, res) => {
         })
 })
 
+blogsRouter.put('/:id', async (req, res) =>{
+  const {title, author, url, likes} = req.body
+  const id = req.params.id
+  const blog = {
+    id, title, author, url, likes
+  }
+  const updatedBlog = await Blog.findByIdAndUpdate(id, blog, {new: true})
+  res.json(updatedBlog)
+})
+
 blogsRouter.delete('/', async(req, res) => {
   await Blog.deleteMany({})
   res.status(204).end()
