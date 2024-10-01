@@ -121,11 +121,33 @@ test('Creates a new blog post successfully', async ()=>{
 
 
     const currentRes = await api.get('/api/blogs')
+    console.log(currentRes.body)
     const currentLength = currentRes.body.length
     assert.strictEqual(originalLength+1, currentLength)
 
 })
+test.only ('Deletes a single blog (Type wars)', async ()=>{
+    const newBlog = {
+        _id: "5a422bc61b54a676234d17fc",
+        title: "Type wars",
+        author: "Robert C. Martin",
+        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+        likes: 2,
+        __v: 0
+      }
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+    const id = newBlog._id
+    const originalRes = await api.get('/api/blogs')
 
+    await api
+            .delete(`/api/blogs/${id}`)
+            .expect(204)
+    const currentRes = await api.get('/api/blogs')
+    assert.strictEqual(originalRes.body.length-1, currentRes.body.length)
+
+})
 after(async () => {
     await mongoose.connection.close()
 })
