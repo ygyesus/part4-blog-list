@@ -89,6 +89,19 @@ test('correct length blogs', async ()=>{
     assert.strictEqual(response.body.length, blogs.length)
 })
 
+test('Unique identifier is named ID', async ()=>{
+    const response = await api.get('/api/blogs')
+    const blogs = response.body
+    const result = true
+    for (const blog of blogs){
+        if (!blog.id){
+            result = false
+            break
+        }
+    }
+    assert.strictEqual(result, true)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
