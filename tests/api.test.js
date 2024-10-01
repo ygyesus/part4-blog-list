@@ -30,7 +30,7 @@ const Blog = require('../models/blog')
 beforeEach(async () => {
     await Blog.deleteMany({})
 })
-test('correct length blogs', async ()=>{
+test('correct amount of total blogs', async ()=>{
     const blogs = [
         {
           _id: "5a422a851b54a676234d17f7",
@@ -100,6 +100,30 @@ test('Unique identifier is named ID', async ()=>{
         }
     }
     assert.strictEqual(result, true)
+})
+
+test('Creates a new blog post successfully', async ()=>{
+    const response = await api.get('/api/blogs')
+    const originalLength = response.body.length
+    const newBlog = {
+        // _id: "222222222222222222",
+        title: "TITLE",
+        author: "AUTHOR",
+        url: "URL",
+        likes: 444,
+        __v: 0
+    }
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+
+    const currentRes = await api.get('/api/blogs')
+    const currentLength = currentRes.body.length
+    assert.strictEqual(originalLength+1, currentLength)
+
 })
 
 after(async () => {
